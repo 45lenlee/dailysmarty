@@ -3,7 +3,7 @@ require 'rails_helper'
 describe 'navigate' do
 
   before do
-    @topic = Topic.create(title: "Sports")
+    @topic = FactoryGirl.create(:topic)
   end
 
   describe 'index' do
@@ -13,16 +13,19 @@ describe 'navigate' do
     end
 
     it 'renders the list of topics' do
-      Topic.create(title: "Coding")
+      FactoryGirl.create(:second_topic)
       visit topics_path
       expect(page).to have_content(/Sports|Coding/)
     end
 
     it 'each topic links to its show page' do
       visit topics_path
-      expect(page).to have_link(@topic.title, href: topic_path(@topic))
+      expect(page).to have_link(@topic.title, href: topic_posts_path(topic_id: @topic))
     end
 
+    before do
+      visit topic_posts_path(topic_id: @topic)
+    end
   end
 
   describe 'show' do
